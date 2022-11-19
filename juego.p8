@@ -137,23 +137,26 @@ function _update_juego()
 	player.flp=true
 	
  end
+ 
 	if btn(1,1) then 
 	player.dx += player.acc 
 	player.move = true
 	player.flp=false
 	player.s = 003
 	end 
+	
 	if btnp(2,1) and player.boost then 
 	 
 	 player.j = jump_max
 	 player.boost = false
 	 
-	 if colision_map(player,"up",0) then
+	 if collide_map(player,"up",0) then
 		 	--hola="si"
 		 	player.dy=0
 		end
-	end
 	 
+	end
+			 
 	
 	if player.move 
 	and not btn(0,1)
@@ -176,10 +179,7 @@ function _update_juego()
 	if(pelota.y > 95) then
 		pelota.y = 95
 		pelota.dy *= -pelota.rebote
-	end
-	 
-	 
-	 
+	end 
 	
 end
 
@@ -231,7 +231,7 @@ end
 -->8
 --funcion colision
 
-function colision_map(obj, atm, flag)
+function collide_map(obj, aim, flag)
 
 local x=obj.x
 local y=obj.y
@@ -252,9 +252,10 @@ if aim=="left" then
    x2=x+w  y2=y+h-1
 
  elseif aim=="up" then
- 		hola="si"
+ 		--hola="si"
    x1=x+2    y1=y-1
    x2=x+w-3  y2=y
+			
 
  elseif aim=="down" then
    x1=x+2      y1=y+h
@@ -269,8 +270,10 @@ if aim=="left" then
  or fget(mget(x1,y2), flag)
  or fget(mget(x2,y1), flag)
  or fget(mget(x2,y2), flag) then
+   hola="entro"
    return true
  else
+ 		hola="si"
    return false
  end
 
