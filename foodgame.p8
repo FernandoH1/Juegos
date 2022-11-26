@@ -4,6 +4,8 @@ __lua__
 --juego de capturar comida
 --the game
 
+function _init()
+
 canasta={
 	s=1
 }
@@ -28,15 +30,16 @@ fruta={
 }
 
 gravedad=1
-nivel=1
+nivel=0
 puntos=0
+		_update = update_menu
+		_draw = init_menu 
+end 
 
-function _init()
-				if(nivel==1) then
-					_update = update_menu
-					_draw = init_menu
-				end
-    for i=1,nivel do
+function _update_juego()
+
+function crear_food()
+for i=1,nivel do
         fruit={
         	--flr conviente a entero en mumero random
         	--rnd numero random
@@ -46,10 +49,8 @@ function _init()
         }
         --agrega los elementos al otro array
         add(frutas,fruit)
-    end 
+    end
 end
-
-function _update_juego()
 	--movimineto del jugador
 	jugador.x += jugador.dx     
 	jugador.dx*=jugador.friccion
@@ -116,12 +117,13 @@ function _update_juego()
 				--# cuenta y corrobora los elementos de la tabla
     if #frutas==0 then
         nivel+=1
-        _init()
+        crear_food()  
     end
     
     --game over 
     if puntos<0 then
     		sfx(1)
+    		del(frutas,fruit)
     	_update = update_gameover
     	_draw = init_game
     end
@@ -137,14 +139,75 @@ function _draw_juego()
         spr(fruit.sprite,fruit.x,fruit.y)
     end
 
-    print("puntos: "..puntos)
-    print("nivel: "..nivel)
+    print("puntos: ",0,0,7)
+    print(puntos,30,0,10)
+    print("nivel: ",0,6,7)
+    print(nivel,30,6,10)
 end
 -->8
 --menu del juego
 function init_menu()
-	cls(4)
-	print("press ❎ to start",30,60)
+	cls(6)
+	rect(2,2,125,108)
+	rect(4,4,123,30)
+	print("controles",45,8)
+	print("movimiento (  /  )",30,20)
+	print("⬅️ ➡️",78,20,2)
+	rectfill(4,32,123,106,0)
+	rect(4,32,123,106,2)
+	print("objetos",50,35,7)
+	--jugador + canasta
+	spr(jugador.s,80,60,1,1,jugador.giro)
+ spr(canasta.s,100,60)
+ --fruta
+ spr(16,13,60)
+ spr(17,13,70)
+ spr(18,13,80)
+ spr(19,13,90)
+ --comidas
+ spr(20,47,60)
+ spr(21,47,70)
+ spr(22,47,80)
+ spr(23,47,90)
+ --menu de info
+ rectfill(67,71,121,104,8)
+ rect(67,71,121,104,10)
+ --texto
+ print("instrucciones",69,79)
+ print("press ⬆️ -->",72,90)
+ 
+ print("frutas  comida  jugador+cesta",6,50,7)
+	print("press ❎ to start",30,117,0)
+end
+
+function init_i()
+	cls(6)
+	rect(2,2,125,108,0)
+	rect(4,4,123,15,0)
+	print("instrucciones",40,8)
+	rectfill(4,17,123,106,0)
+	rect(4,17,123,60,11)
+	rect(4,61,123,106,8)
+ --fruta
+ spr(16,8,22)
+ spr(17,8,31)
+ spr(18,17,22)
+ spr(19,17,31)
+ print("puntos frutas (+10)",30,22,3)
+ print("en el nivel 6 se resta",30,32,7)
+ print("5 pts si las frutas impactan",8,42,7)
+ print("contra el suelo.",8,52,7)
+ --comidas
+	spr(20,8,65)
+ spr(21,8,74)
+	spr(22,17,65)
+ spr(23,17,74)
+ print("puntos comida (-10)",30,66,8)
+ print("la comida no descontara",30,74,7)
+ print("puntos si no es capturada o",8,84,7)
+ print("si impacta contra el suelo.",8,94,7)
+ --texto
+ print("<-- volver press ⬆️",25,117,0)
 end
 
 function init_game()
@@ -159,14 +222,28 @@ function update_menu()
 		_update = _update_juego
 		_draw = _draw_juego
 	end
+	
+	if btnp(⬆️) then
+		_update = update_i
+		_draw = init_i
+	end
 end
 
 function update_gameover()
 	 if btnp(❎) then
-		_update = _update_juego
+	 _update = _update_juego
 		_draw = _draw_juego
 		puntos=0
-		nivel=1
+		nivel=0
+		frutas={} 
+	end
+end
+
+function update_i()
+	--sfx(05)
+	if btnp(⬆️) then
+		_update = update_menu
+		_draw = init_menu 
 	end
 end
 __gfx__
